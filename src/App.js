@@ -1,21 +1,28 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import XMLUploader from './XMLUploader.js';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = { roster: null };
+  }
+
   render() {
     return (
       <div className="App">
         <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
+          <h2>Welcome to BS JS</h2>
         </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+        { this.state.roster == null
+          ? <XMLUploader onUpload={(xml) => { this.setState({roster: xml}); }} />
+          : <h1>{this.state.roster.getElementsByTagName('roster')[0].getAttribute('name')}</h1>
+        }
       </div>
     );
   }
+
 }
 
 export default App;
