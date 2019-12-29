@@ -10,7 +10,7 @@ class XMLUploader extends Component {
         this.state = { error: null, loading: false };
     }
 
-    _handleNewFile(file) {
+    handleNewFile(file) {
         this.setState({ error: null, loading: true });
 
         const reader = new FileReader();
@@ -21,7 +21,7 @@ class XMLUploader extends Component {
 
         reader.addEventListener('load', (e) => {
             this.setState({ error: null, loading: false });
-            const xml = this._parseXML(reader.result);
+            const xml = this.parseXML(reader.result);
 
             if (xml != null) {
                 this.props.onUpload(xml);
@@ -31,7 +31,7 @@ class XMLUploader extends Component {
         reader.readAsText(file);
     }
 
-    _parseXML(contents) {
+    parseXML(contents) {
         const dom = (new DOMParser()).parseFromString(contents, 'application/xml');
         const errors = dom.getElementsByTagName('parsererror');
         if (errors.length !== 0) {
@@ -47,7 +47,7 @@ class XMLUploader extends Component {
                 <p>
                     To get started, upload a roster file:<br /><em>(note: this should be a .ros (XML), not a .rosz (zipped XML))</em>
                 </p>
-                <input type="file" id="rosterUpload" onChange={(e) => { this._handleNewFile(e.target.files[0]); e.target.value = null; }} />
+                <input type="file" id="rosterUpload" onChange={(e) => { this.handleNewFile(e.target.files[0]); e.target.value = null; }} />
                 <div>
                     {this.state.loading ? <img src={oval} alt="loading" /> : null}
                     {this.state.error != null ? <p className="upload-error">{this.state.error}</p> : null}

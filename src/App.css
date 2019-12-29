@@ -13,6 +13,12 @@
   color: white;
 }
 
+@media print {
+  .App-header {
+    display: none;
+  }
+}
+
 .App-intro {
   font-size: large;
 }
