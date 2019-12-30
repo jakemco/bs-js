@@ -32,6 +32,7 @@ class XMLUploader extends Component {
     }
 
     parseXML(contents) {
+        contents = contents.replace(/xmlns=".*?"/, '');
         const dom = (new DOMParser()).parseFromString(contents, 'application/xml');
         const errors = dom.getElementsByTagName('parsererror');
         if (errors.length !== 0) {
