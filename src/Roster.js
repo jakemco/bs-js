@@ -2,23 +2,20 @@ import React, { Component } from 'react';
 import './Roster.css';
 
 class Roster extends Component {
-
-    ns_resolver() {
-        return this.props.xml.createNSResolver(this.props.xml.firstElementChild);
-    }
-
     xpath(path) {
         const result = this.props.xml.evaluate(
             path, this.props.xml, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
-        const out = [];
 
-        let nextNode = result.iterateNext();
-        while (nextNode != null) {
-            out.push(nextNode);
-            nextNode = result.iterateNext();
+        // convert the XPath iterator into a legit iterator (generator)
+        function *xpath_iter() {
+            let nextNode = result.iterateNext();
+            while (nextNode != null) {
+                yield nextNode;
+                nextNode = result.iterateNext();
+            }
         }
 
-        return out;
+        return xpath_iter();
     }
 
     at_xpath(path) {
