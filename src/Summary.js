@@ -7,7 +7,7 @@ class Summary extends Component {
 
         return (
             <div className="Summary">
-                {forces.map(f => <ForceSummary roster={this.props.roster} force={f} key={f.id}/>)}
+                {forces.map(f => <ForceSummary roster={this.props.roster} force={f} key={f.id} />)}
             </div>
         )
     }
@@ -30,19 +30,37 @@ class ForceSummary extends Component {
     render() {
         return (
             <div className="ForceSummary">
-                <h2>{this.props.force.getAttribute('name')} ({this.props.force.getAttribute('catalogueName')})</h2>
+                <h2>{this.props.force.getAttribute('name')}&nbsp;({this.props.force.getAttribute('catalogueName')})</h2>
                 <ul className="ForceSummary-categories">
-                    {Object.entries(this.selectionsByCategory()).map(([name, selections]) => 
+                    {Object.entries(this.selectionsByCategory()).map(([name, selections]) =>
                         <li key={name}>{name}
                             <ul>
-                                {selections.map((s) => 
-                                    <li key={s.id}>{s.getAttribute('name')}</li>
-                                )}
+                                {selections.map((s) =>
+                                    <UnitSummary roster={this.props.roster} selection={s} key={s.id} />)}
                             </ul>
                         </li>
                     )}
                 </ul>
             </div>
+        )
+    }
+}
+
+class UnitSummary extends Component {
+    render() {
+        const models = this.props.roster.xpath(
+            "./selections/selection/profiles/profile[@typeName='Unit']",
+            this.props.selection,
+        ).map(profile => profile.parentNode.parentNode);
+        return (
+            <li className="UnitSummary">
+                {this.props.selection.getAttribute('name')}
+                <ul>
+                    {models.map(model => <li key={model.id}>
+                        {model.getAttribute('number')}x {model.getAttribute('name')}
+                    </li>)}
+                </ul>
+            </li>
         )
     }
 }
