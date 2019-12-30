@@ -7,7 +7,7 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { roster: null };
+    this.state = { xml: null };
   }
 
   render() {
@@ -16,9 +16,9 @@ class App extends Component {
         <div className="App-header">
           <h2>Welcome to BS JS</h2>
         </div>
-        {this.state.roster == null
-          ? <XMLUploader onUpload={(xml) => { this.setState({ roster: xml }); }} />
-          : <Roster xml={this.state.roster} />
+        {this.state.xml == null
+          ? <XMLUploader onUpload={(xml) => { this.setState({ xml: xml }); }} />
+          : <Roster xml={this.state.xml} />
         }
       </div>
     );

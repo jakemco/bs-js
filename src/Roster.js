@@ -1,26 +1,26 @@
 import React, { Component } from 'react';
 import './Roster.css';
 
-class Roster extends Component {
-    xpath(path) {
-        const result = this.props.xml.evaluate(
-            path, this.props.xml, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
+import Summary from './Summary.js';
 
-        // convert the XPath iterator into a legit iterator (generator)
-        function *xpath_iter() {
-            let nextNode = result.iterateNext();
-            while (nextNode != null) {
-                yield nextNode;
-                nextNode = result.iterateNext();
-            }
+class Roster extends Component {
+    xpath(path, subsearch) {
+        const result = this.props.xml.evaluate(
+            path, subsearch || this.props.xml, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
+
+        const out = [];
+        let nextNode = result.iterateNext();
+        while (nextNode != null) {
+            out.push(nextNode);
+            nextNode = result.iterateNext();
         }
 
-        return xpath_iter();
+        return out;
     }
 
-    at_xpath(path) {
+    at_xpath(path, subsearch) {
         const result = this.props.xml.evaluate(
-            path, this.props.xml, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+            path, subsearch || this.props.xml, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
         return result.singleNodeValue;
     }
 
@@ -28,6 +28,8 @@ class Roster extends Component {
         return (
             <div className="Roster">
                 <h1>{this.at_xpath('/roster').getAttribute('name')}</h1>
+                <Summary roster={this} />
+                {/* TODO: cheatsheet goes here */}
             </div>
         );
     }
