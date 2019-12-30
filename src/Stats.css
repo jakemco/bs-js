@@ -1,0 +1,19 @@
+.Stats {
+    margin-bottom: 20px;
+}
+
+.Stats table, .Stats th, .Stats td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 5px;
+}
+
+.Stats tr:nth-child(even) {
+    background: #eee;
+}
+
+.Stats th {
+    background-color: #333;
+    color: #fff;
+    font-size: large;
+}
