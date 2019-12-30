@@ -2,6 +2,7 @@
   "name": "bs-js",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://jakemask.com/bs-js/",
   "dependencies": {
     "flow-bin": "^0.114.0",
     "react": "^16.12.0",
