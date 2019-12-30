@@ -3,38 +3,20 @@ import './Roster.css';
 
 import Summary from './Summary.js';
 import Stats from './Stats.js';
+import BSNode from './BSNode';
 
 class Roster extends Component {
-    xpath(path, subsearch) {
-        const result = this.props.xml.evaluate(
-            path, subsearch || this.props.xml, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
-
-        const out = [];
-        let nextNode = result.iterateNext();
-        while (nextNode != null) {
-            out.push(nextNode);
-            nextNode = result.iterateNext();
-        }
-
-        return out;
-    }
-
-    at_xpath(path, subsearch) {
-        const result = this.props.xml.evaluate(
-            path, subsearch || this.props.xml, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
-        return result.singleNodeValue;
-    }
-
     render() {
+        const roster = new BSNode(this.props.xml);
         return (
             <div className="Roster">
-                <h1>{this.at_xpath('/roster').getAttribute('name')}</h1>
-                <Summary roster={this} />
+                <h1>{roster.at_xpath('/roster').getAttribute('name')}</h1>
+                <Summary roster={roster} />
                 <h1>Tables</h1>
-                <Stats roster={this} type="Unit" />
-                <Stats roster={this} type="Weapon" sort={(p1, p2) => {
-                    const type1 = this.at_xpath(".//characteristic[@name='Type']", p1).textContent;
-                    const type2 = this.at_xpath(".//characteristic[@name='Type']", p2).textContent;
+                <Stats roster={roster} type="Unit" />
+                <Stats roster={roster} type="Weapon" sort={(p1, p2) => {
+                    const type1 = p1.at_xpath(".//characteristic[@name='Type']").textContent;
+                    const type2 = p2.at_xpath(".//characteristic[@name='Type']").textContent;
 
                     if ((type1 === 'Melee' && type2 === 'Melee') || (type1 !== 'Melee' && type2 !== 'Melee')) {
                         const name1 = p1.getAttribute('name');

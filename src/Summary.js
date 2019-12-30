@@ -7,7 +7,7 @@ class Summary extends Component {
 
         return (
             <div className="Summary">
-                {forces.map(f => <ForceSummary roster={this.props.roster} force={f} key={f.id} />)}
+                {forces.map(f => <ForceSummary force={f} key={f.id} />)}
             </div>
         )
     }
@@ -16,10 +16,10 @@ class Summary extends Component {
 class ForceSummary extends Component {
 
     selectionsByCategory() {
-        const selections = this.props.roster.xpath('./selections/selection', this.props.force);
+        const selections = this.props.force.xpath('./selections/selection');
 
         return selections.reduce((acc, s) => {
-            const category = this.props.roster.at_xpath("./categories/category[@primary='true']", s);
+            const category = s.at_xpath("./categories/category[@primary='true']");
             const key = category != null ? category.getAttribute('name') : 'No Category';
             // defaault dict [], then push the selection back
             (acc[key] = acc[key] || []).push(s);
@@ -35,7 +35,7 @@ class ForceSummary extends Component {
                     {Object.entries(this.selectionsByCategory()).map(([name, selections]) =>
                         <li key={name}>
                             {name}
-                            <SelectionsSummary roster={this.props.roster} selections={selections} />
+                            <SelectionsSummary selections={selections} />
                         </li>
                     )}
                 </ul>
@@ -44,20 +44,20 @@ class ForceSummary extends Component {
     }
 }
 
-function selectionHasUnit(r, s) {
-    return r.xpath(".//profile[@typeName='Unit']", s).length
+function selectionHasUnit(s) {
+    return s.xpath(".//profile[@typeName='Unit']").length
 }
 
 class SelectionsSummary extends Component {
 
     render() {
         const sorted = this.props.selections.sort((x, y) => {
-            return selectionHasUnit(this.props.roster, x) - selectionHasUnit(this.props.roster, y);
+            return selectionHasUnit(x) - selectionHasUnit(y);
         });
 
         return (
             <ul>{sorted.map(s =>
-                <SelectionSummary roster={this.props.roster} selection={s} key={s.id} />
+                <SelectionSummary selection={s} key={s.id} />
             )}</ul>
         );
 
@@ -68,7 +68,7 @@ class SelectionsSummary extends Component {
 class SelectionSummary extends Component {
 
     render() {
-        const selections = this.props.roster.xpath('./selections/selection', this.props.selection);
+        const selections = this.props.selection.xpath('./selections/selection');
         const number = parseInt(this.props.selection.getAttribute('number'), 10);
         const name = this.props.selection.getAttribute('name');
 
@@ -76,11 +76,11 @@ class SelectionSummary extends Component {
 
         return (
             <li className="SelectionSummary">
-                {selectionHasUnit(this.props.roster, this.props.selection)
+                {selectionHasUnit(this.props.selection)
                     ? <b>{number_and_name}</b>
                     : <em>{number_and_name}</em>
                 }
-                <SelectionsSummary roster={this.props.roster} selections={selections} />
+                <SelectionsSummary selections={selections} />
             </li>
         )
     }
